@@ -1,7 +1,5 @@
 from flask import Blueprint, jsonify, request
-
-from db import db
-from db.models import Offer
+from db.models import Offer, db
 from tools import offer_instance_to_dict
 
 offer_blueprint = Blueprint('offer_blueprint', __name__)
@@ -9,6 +7,10 @@ offer_blueprint = Blueprint('offer_blueprint', __name__)
 
 @offer_blueprint.route('/offers/')
 def get_offers():
+    """
+    The view contains request for all offers
+    :return: json
+    """
     offers = Offer.query.all()
     result = []
     for offer in offers:
@@ -18,6 +20,10 @@ def get_offers():
 
 @offer_blueprint.route('/offers/<int:uid>')
 def get_offers_by_id(uid):
+    """
+    The view contains request for offer by id
+    :return: json
+    """
     offer = Offer.query.get(uid)
     if offer is not None:
         result = offer_instance_to_dict(offer)
@@ -28,6 +34,10 @@ def get_offers_by_id(uid):
 
 @offer_blueprint.route('/offers/', methods=['POST'])
 def create_offer():
+    """
+    The view allows to create new offer
+    :return: json
+    """
     data = request.get_json()
     offer = Offer(order_id=data['order_id'],
                   executor_id=data['executor_id'])
@@ -38,6 +48,11 @@ def create_offer():
 
 @offer_blueprint.route('/offers/<int:uid>', methods=['PUT', 'DELETE'])
 def change_offer(uid):
+    """
+    The view contains following DB requests:
+    - change offer data
+    - delete offer by id
+    """
     if request.method == 'PUT':
         data = request.json
         keys = data.keys()

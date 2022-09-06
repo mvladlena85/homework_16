@@ -1,20 +1,29 @@
 import json
-from datetime import datetime
+from datetime import datetime, date
 from db.models import Order, Offer, User
 
 
-def load_data(path):
+def load_data(path: str) -> dict:
+    """
+    Load data from file
+    """
     with open(path, 'r', encoding='utf-8') as f:
         data = json.load(f)
         return data
 
 
-def str_to_date(str_date):
+def str_to_date(str_date: str) -> date:
+    """
+    Convert string to date
+    """
     date_object = datetime.strptime(str_date, '%m/%d/%Y').date()
     return date_object
 
 
-def load_users():
+def load_users() -> list[User]:
+    """
+    Create list of User objects from json
+    """
     users = load_data('json_data/users.json')
     db_users = []
     for user in users:
@@ -29,7 +38,10 @@ def load_users():
     return db_users
 
 
-def load_offers():
+def load_offers() -> list[Offer]:
+    """
+    Create list of Offer objects from json
+    """
     offers = load_data('json_data/offers.json')
     db_offers = []
     for offer in offers:
@@ -40,7 +52,10 @@ def load_offers():
     return db_offers
 
 
-def load_orders():
+def load_orders() -> list[Order]:
+    """
+    Create list of Order objects from json
+    """
     orders = load_data('json_data/orders.json')
     db_orders = []
     for order in orders:
@@ -58,7 +73,7 @@ def load_orders():
     return db_orders
 
 
-def user_instance_to_dict(user):
+def user_instance_to_dict(user: User) -> dict:
     """
     Serialize implementation
     """
@@ -71,13 +86,19 @@ def user_instance_to_dict(user):
             "phone": user.phone}
 
 
-def offer_instance_to_dict(offer):
+def offer_instance_to_dict(offer: Offer) -> dict:
+    """
+        Serialize implementation
+    """
     return {"id": offer.id,
             "order_id": offer.order_id,
             "executor_id": offer.executor_id}
 
 
-def order_instance_to_dict(order):
+def order_instance_to_dict(order: Order) -> dict:
+    """
+    Serialize implementation
+    """
     return {"id": order.id,
             "name": order.name,
             "description": order.description,

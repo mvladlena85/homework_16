@@ -1,7 +1,5 @@
 from flask import Blueprint, jsonify, request
-
-from db import db
-from db.models import Order
+from db.models import Order, db
 from tools import str_to_date, order_instance_to_dict
 
 order_blueprint = Blueprint('order_blueprint', __name__)
@@ -9,6 +7,10 @@ order_blueprint = Blueprint('order_blueprint', __name__)
 
 @order_blueprint.route('/orders/')
 def get_orders():
+    """
+    The view contains request for all orders
+    :return: json
+    """
     orders = Order.query.all()
     result = []
     for order in orders:
@@ -18,6 +20,10 @@ def get_orders():
 
 @order_blueprint.route('/orders/<int:uid>/')
 def get_orders_by_id(uid):
+    """
+    The view contains request for order by id
+    :return: json
+    """
     order = Order.query.get(uid)
     if order is not None:
         result = order_instance_to_dict(order)
@@ -28,6 +34,10 @@ def get_orders_by_id(uid):
 
 @order_blueprint.route('/orders/', methods=['POST'])
 def create_order():
+    """
+    The view allows to create new order
+    :return: json
+    """
     order_data = request.get_json()
     order = Order(name=order_data['name'],
                   description=order_data['description'],
@@ -44,6 +54,11 @@ def create_order():
 
 @order_blueprint.route('/orders/<int:uid>', methods=['PUT', 'DELETE'])
 def change_order(uid):
+    """
+    The view contains following DB requests:
+    - change order data
+    - delete order by id
+    """
     if request.method == 'PUT':
         data = request.json
         keys = data.keys()

@@ -1,14 +1,17 @@
 from flask import jsonify, request, Blueprint
-
-from db import db
-from db.models import User
+from db.models import User, db
 from tools import user_instance_to_dict
+
 
 user_blueprint = Blueprint('user_blueprint', __name__)
 
 
 @user_blueprint.route('/users/')
 def get_users():
+    """
+    The view contains request for all users
+    :return: json
+    """
     users = User.query.all()
     result = []
     for user in users:
@@ -18,6 +21,10 @@ def get_users():
 
 @user_blueprint.route('/users/', methods=['POST'])
 def create_user():
+    """
+    The view allows to create new user
+    :return: json
+    """
     data = request.get_json()
     user = User(first_name=data.get('first_name'),
                 last_name=data.get('last_name'),
@@ -32,6 +39,12 @@ def create_user():
 
 @user_blueprint.route('/users/<int:uid>', methods=['GET', 'PUT', 'DELETE'])
 def change_user(uid):
+    """
+    The view contains following DB requests:
+    - get user by id
+    - change user's data
+    - delete user by id
+    """
     user = User.query.get(uid)
     if request.method == 'GET':
         if user is not None:

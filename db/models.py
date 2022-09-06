@@ -1,5 +1,11 @@
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
-from . import db
+
+"""
+Class contains all db models
+"""
+
+db = SQLAlchemy()
 
 
 class User(db.Model):
