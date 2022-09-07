@@ -16,7 +16,7 @@ def get_users():
     result = []
     for user in users:
         result.append(user_instance_to_dict(user))
-    return jsonify(result)
+    return jsonify(result), 200
 
 
 @user_blueprint.route('/users/', methods=['POST'])
@@ -34,7 +34,7 @@ def create_user():
                 phone=data.get('phone'))
     db.session.add(user)
     db.session.commit()
-    return jsonify(user_instance_to_dict(user))
+    return jsonify(user_instance_to_dict(user)), 201
 
 
 @user_blueprint.route('/users/<int:uid>', methods=['GET', 'PUT', 'DELETE'])
@@ -51,7 +51,7 @@ def change_user(uid):
             result = user_instance_to_dict(user)
             return jsonify(result), 200
         else:
-            return "No such user", 204
+            return "No such user", 404
 
     elif request.method == 'PUT':
         user_data = request.json

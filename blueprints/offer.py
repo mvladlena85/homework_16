@@ -29,7 +29,7 @@ def get_offers_by_id(uid):
         result = offer_instance_to_dict(offer)
         return jsonify(result), 200
     else:
-        return "No such offer", 204
+        return "No such offer", 404
 
 
 @offer_blueprint.route('/offers/', methods=['POST'])
@@ -43,7 +43,7 @@ def create_offer():
                   executor_id=data['executor_id'])
     db.session.add(offer)
     db.session.commit()
-    return jsonify(offer_instance_to_dict(offer))
+    return jsonify(offer_instance_to_dict(offer)), 201
 
 
 @offer_blueprint.route('/offers/<int:uid>', methods=['PUT', 'DELETE'])

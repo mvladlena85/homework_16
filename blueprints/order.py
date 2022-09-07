@@ -15,7 +15,7 @@ def get_orders():
     result = []
     for order in orders:
         result.append(order_instance_to_dict(order))
-    return jsonify(result)
+    return jsonify(result), 200
 
 
 @order_blueprint.route('/orders/<int:uid>/')
@@ -29,7 +29,7 @@ def get_orders_by_id(uid):
         result = order_instance_to_dict(order)
         return jsonify(result), 200
     else:
-        return "No such order", 204
+        return "No such order", 404
 
 
 @order_blueprint.route('/orders/', methods=['POST'])
@@ -49,7 +49,7 @@ def create_order():
                   executor_id=order_data['executor_id'])
     db.session.add(order)
     db.session.commit()
-    return jsonify(order_instance_to_dict(order))
+    return jsonify(order_instance_to_dict(order)), 201
 
 
 @order_blueprint.route('/orders/<int:uid>', methods=['PUT', 'DELETE'])
